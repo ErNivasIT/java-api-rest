@@ -1,0 +1,147 @@
+
+
+az login --for Login inside the azure cli
+
+az group create --name acr-resource-group --location eastus  /*for creating the resource group*/
+
+/*for creating the azure container registry*/
+az acr create --name <registry-name> --resource-group <resource-group-name> --sku Standard --location <zone-name>
+
+e.g.
+
+az acr create --name shree001 --resource-group acr-resource-group --sku Standard --location eastus
+az acr create --name shree001 --resource-group acr-resource-group --sku Basic --location eastus
+
+/*now get the username / password for this container registry */
+az acr credential show --name shree001
+
+output would be like :
+{
+  "passwords": [
+    {
+      "name": "password",
+      "value": "rEVpGcA2fbuhXXBcNYs4aKnXibPOK1glSBe4M86VB1+ACRC1N83u"
+    },
+    {
+      "name": "password2",
+      "value": "DkF4rB1T2uHRkWA1xsw+UyF2HzqpGMXVZbl8c/8YQt+ACRDEIBtQ"
+    }
+  ],
+  "username": "shree001"
+}
+
+
+/*now login into the container registry*/
+
+az acr login --name <registry name> 
+
+/*create image of the api / project at local*/
+
+docker build -t <image name>:<version> .
+
+/*add tag */
+
+docker tag  <image name>:<version> <azure-login-server>/<image name>:<version>
+
+/*for pushing the image into the acr need admin rights to the user */
+az acr update -n <user-name> --admin-enabled true
+
+e.g.
+az acr update -n shree001 --admin-enabled true
+
+
+docker login <acr-login-server> -u <acr-username> -p <acr-password>
+
+docker login shree001.azurecr.io -u shree001 -p rEVpGcA2fbuhXXBcNYs4aKnXibPOK1glSBe4M86VB1+ACRC1N83u
+
+docker push shree001.azurecr.io/emp-app:1.0.0
+
+
+--To View Images inside the Container Registry user need to add Reader role for Container Registry otherwise he will be not able to see the images
+az acr login --name shree001 <acr-name?>
+az acr show --name shree001 --query loginServer --output table
+
+/*how to see the repositories inside the acr*/
+
+az acr repository list --name shree001 --output table
+
+kubectl get svc myapp-service
+
+az group create --name aks-resource-group --location eastus
+
+az aks create --name aks-cluster --resource-group aks-resource-group --node-count 3 --generate-ssh-keys
+
+
+choco install kubernetes-helm
+
+
+kubectl config get-contexts
+
+helm init --upgrade --wait
+
+
+helm install first-release . 
+
+shreeregistry.azurecr.io
+
+shreeregistry
+UK0IsLb3LtThG8smMoYybUPoG1JQ0jNTOa5L1LOe/f+ACRB1lZ1o
+iwEEyxZVT5V+pMoNguON+7SiglQbwqw3xQ1++zxMMv+ACRBsvp+C
+
+docker tag emp-app:1.0.0 shreeregistry.azurecr.io/emp-app:1.0.0
+
+docker push shreeregistry.azurecr.io/emp-app:1.0.0
+
+docker login shreeregistry.azurecr.io -u shreeregistry -p UK0IsLb3LtThG8smMoYybUPoG1JQ0jNTOa5L1LOe/f+ACRB1lZ1o
+  
+az acr delete --name shreeregistry --resource-group acr-resource-group
+
+delete resource command
+az group delete --name acr-resource-group
+az aks delete --resource-group <resource-group-name> --name <aks-cluster-name>
+
+
+---------------------AKS Create--------------
+
+
+https://docs.bitnami.com/azure/get-started-aks/
+az login
+
+If you have multiple subscriptions, you can optionally set the subscription you wish to use in the SUBSCRIPTION-NAME placeholder.
+
+az account set --subscription "SUBSCRIPTION-NAME"
+
+az group create --name aks-resource-group --location eastus
+az aks create --name aks-cluster --resource-group aks-resource-group --node-count 3 --generate-ssh-keys
+az aks show --resource-group aks-resource-group --name aks-cluster
+az aks delete --resource-group aks-resource-group --name aks-cluster --yes --no-wait
+az aks get-credentials --name aks-cluster --resource-group aks-resource-group
+
+for listing all resource groups
+az group list
+az aks list
+az acr list
+az ad user list --active directory user
+
+
+Kubernetes
+
+kubectl config get-contexts
+kubectl config delete-context aks-cluster
+kubectl config use-context docker-desktop
+kubectl config use-context aks-cluster
+kubectl config delete-context aks-cluster
+
+PS D:\Shree\Projects\e-Employees-Apps\EmployeesAPI\demo-release> kubectl get pods
+NAME                            READY   STATUS             RESTARTS        AGE
+demo-release-86db78754d-vhjpn   0/1     CrashLoopBackOff   8 (2m18s ago)   18m
+demo-release-86db78754d-vtw4j   0/1     CrashLoopBackOff   8 (93s ago)     18m
+demo-release-86db78754d-zbdwt   0/1     CrashLoopBackOff   8 (2m4s ago)    18m
+
+kubectl get svc
+kubectl logs demo-release-86db78754d-vhjpn
+
+
+
+
+

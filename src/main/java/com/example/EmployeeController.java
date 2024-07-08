@@ -28,6 +28,10 @@ public class EmployeeController {
 
         StringBuilder response = new StringBuilder("Files uploaded successfully:\n");
 
+        File uploadDir = new File(UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs(); // Create directory if it doesn't exist
+        }
 
          for (MultipartFile file : files) {
             if (file.isEmpty()) {
