@@ -1,22 +1,27 @@
 package com.example;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Console;
+import com.example.Services.EmployeeServices;
+
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api")
 public class EmployeeController {
     private static String UPLOAD_DIR = "uploads";
-
+    @Autowired
+    private EmployeeServices _empServices;
     @GetMapping("/hello/{name}")
     public String Hello(@PathVariable String name) {
         return "Hello you passed " + name;
@@ -53,5 +58,11 @@ public class EmployeeController {
 
         // Logic to handle file upload
         return response.toString();
+    }
+    @GetMapping("GetEmps")
+    public List<Employee> GetEmployees()
+    {
+        List<Employee> res=_empServices.GetEmployees();
+        return res;
     }
 }
